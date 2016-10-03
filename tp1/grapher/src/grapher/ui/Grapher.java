@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import javax.swing.SwingUtilities;
 
 import java.awt.Point;
 
@@ -29,6 +30,8 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 	protected boolean leftButton = false;
 	protected boolean rightButton = false;
 	protected boolean middleButton = false;
+	protected int prevY = 0;
+ 	protected int prevX = 0;
 
 	protected int W = 400;
 	protected int H = 300;
@@ -195,16 +198,19 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 		repaint();
 	}
 
-	protected void mousePressed(MouseEvent e) {
+	public void mousePressed(MouseEvent e) {
 		if(SwingUtilities.isLeftMouseButton(e)) {
 			leftButton = true;
 		}
 		if(SwingUtilities.isRightMouseButton(e)) {
 			rightButton = true;
 		}
+
+		prevX = x(e.getX());
+		prevY = y(e.getY());
 	}
 
-	protected void mouseReleased(MouseEvent e) {
+	public void mouseReleased(MouseEvent e) {
 		if(SwingUtilities.isLeftMouseButton(e)) {
 			leftButton = false;
 		}
@@ -214,18 +220,30 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 	}
 
 	// Fonction non utilisées
-	protected void mouseClicked(MouseEvent e);
-
-	protected void mouseMoved(MouseEvent e);
-
-	protected void mouseDragged(MouseEvent e) {
-		int prevX = e.getX();
-		int prevY = e.getY();
+	public void mouseClicked(MouseEvent e) {
 
 	}
 
-	protected void mouseEntered(MouseEvent e);
+	public void mouseMoved(MouseEvent e) {
 
-	protected void mouseExited(MouseEvent e);
+	}
+
+	public void mouseDragged(MouseEvent e) {
+		int newX = x(e.getX());
+		int newY = y(e.getY());
+		if(leftButton) {
+			int translateX = (int) (newX-prevX;
+			int translateY = (int) (newY-prevY;
+			translate(translateX, translateY);
+		}
+	}
+
+	public void mouseEntered(MouseEvent e) {
+
+	}
+
+	public void mouseExited(MouseEvent e) {
+
+	}
 
 }
