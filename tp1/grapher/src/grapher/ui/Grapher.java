@@ -223,7 +223,11 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 			dragged = false;
 		}
 		if(SwingUtilities.isRightMouseButton(e)) {
+			if(!dragged){
+				zoom(e.getPoint(),-5);
+			}
 			rightButton = false;
+			dragged = false;
 		}
 	}
 
@@ -244,6 +248,9 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 			int translateX = (int) (newX-prevX);
 			int translateY = (int) (newY-prevY);
 			translate(translateX, translateY);
+			dragged = true;
+		}
+		if(rightButton){
 			dragged = true;
 		}
 
