@@ -10,6 +10,8 @@ import javax.swing.JPanel;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.Cursor;
 import javax.swing.SwingUtilities;
 
@@ -22,7 +24,7 @@ import static java.lang.Math.*;
 import grapher.fc.*;
 
 // Implémentation des MouseListener et MouseMotionListener pour gérer leur utilisation
-public class Grapher extends JPanel implements MouseListener, MouseMotionListener {
+public class Grapher extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener {
 	static final int MARGIN = 40;
 	static final int STEP = 5;
 
@@ -52,6 +54,7 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 		functions = new Vector<Function>();
 		addMouseListener(this);
 		addMouseMotionListener(this);
+		addMouseWheelListener(this);
 	}
 
 	public void add(String expression) {
@@ -285,6 +288,11 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 
 	public void mouseExited(MouseEvent e) {
 
+	}
+	
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		int tours = e.getWheelRotation();
+		zoom(e.getPoint(),-5*tours);
 	}
 
 }
