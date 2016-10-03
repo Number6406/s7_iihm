@@ -31,6 +31,7 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 	protected boolean leftButton = false;
 	protected boolean rightButton = false;
 	protected boolean middleButton = false;
+	protected boolean dragged = false;
 	protected int prevY = 0;
  	protected int prevX = 0;
 
@@ -214,8 +215,12 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 
 	public void mouseReleased(MouseEvent e) {
 		if(SwingUtilities.isLeftMouseButton(e)) {
+			if(!dragged){
+				zoom(e.getPoint(),5);
+			}
 			leftButton = false;
 			this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			dragged = false;
 		}
 		if(SwingUtilities.isRightMouseButton(e)) {
 			rightButton = false;
@@ -239,6 +244,7 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 			int translateX = (int) (newX-prevX);
 			int translateY = (int) (newY-prevY);
 			translate(translateX, translateY);
+			dragged = true;
 		}
 
 		prevX = newX;
