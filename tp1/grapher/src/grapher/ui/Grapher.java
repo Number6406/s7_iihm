@@ -34,6 +34,8 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 	protected boolean dragged = false;
 	protected int prevY = 0;
  	protected int prevX = 0;
+ 	protected Point prevPoint;
+ 	protected Point basePoint;
 
 	protected int W = 400;
 	protected int H = 300;
@@ -208,9 +210,14 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 		if(SwingUtilities.isRightMouseButton(e)) {
 			rightButton = true;
 		}
+		if(SwingUtilities.isMiddleMouseButton(e)) {
+			middleButton = true;
+			basePoint = e.getPoint();
+		}
 
 		prevX = e.getX();
 		prevY = e.getY();
+		prevPoint = e.getPoint();
 	}
 
 	public void mouseReleased(MouseEvent e) {
@@ -229,6 +236,10 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 			rightButton = false;
 			dragged = false;
 		}
+		if(SwingUtilities.isMiddleMouseButton(e)) {
+			middleButton = false;
+			dragged = false;
+		}
 	}
 
 	// Fonction non utilisées
@@ -243,6 +254,7 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 	public void mouseDragged(MouseEvent e) {
 		int newX = e.getX();
 		int newY = e.getY();
+		Point newP = e.getPoint();
 
 		if(leftButton) { // en cas de translation
 			int translateX = (int) (newX-prevX);
@@ -252,6 +264,15 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 		}
 		if(rightButton){
 			dragged = true;
+		}
+		if(middleButton){
+			dragged = true;
+			
+			double dist = newP.getX() - prevPoint.getX() + newP.getY() - prevPoint.getY();
+			
+			zoom(basePoint,(int) dist);
+			
+			prevPoint = newP;
 		}
 
 		prevX = newX;
