@@ -142,7 +142,27 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 		for(double y = -ystep; y > ymin; y -= ystep) { drawYTick(g2, y); }
 
 		if(select) {
-			g2.drawRect(mouseAnchor.x, mouseAnchor.y, selectWidth, selectHeight);
+			Point debut = new Point();
+			Point fin = new Point();
+			if(dragPoint.x < mouseAnchor.x) {
+				debut.x = dragPoint.x;
+				fin.x = mouseAnchor.x;
+			} else {
+				debut.x = mouseAnchor.x;
+				fin.x = dragPoint.x;
+			}
+			if(dragPoint.y < mouseAnchor.y) {
+				debut.y = dragPoint.y;
+				fin.y = mouseAnchor.y;
+			} else {
+				debut.y = mouseAnchor.y;
+				fin.y = dragPoint.y;
+			}
+
+			selectWidth = fin.x - debut.x;
+      selectHeight = fin.y - debut.y;
+
+			g2.drawRect(debut.x, debut.y, selectWidth, selectHeight);
 		}
 	}
 
@@ -221,7 +241,6 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 		}
 		if(SwingUtilities.isRightMouseButton(e)) {
 			rightButton = true;
-			select = true;
 			mouseAnchor = e.getPoint();
 		}
 		if(SwingUtilities.isMiddleMouseButton(e)) {
@@ -281,13 +300,12 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 			dragged = true;
 		}
 		if(rightButton) {
+			select = true;
 			dragPoint = e.getPoint();
-			selectWidth = dragPoint.x - mouseAnchor.x;
-      selectHeight = dragPoint.y - mouseAnchor.y;
-
       repaint();
 			dragged = true;
 		}
+
 		if(middleButton){
 			dragged = true;
 
