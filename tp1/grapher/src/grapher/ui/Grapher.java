@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.Cursor;
 import javax.swing.SwingUtilities;
 
 import java.awt.Point;
@@ -201,18 +202,20 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 	public void mousePressed(MouseEvent e) {
 		if(SwingUtilities.isLeftMouseButton(e)) {
 			leftButton = true;
+			this.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		}
 		if(SwingUtilities.isRightMouseButton(e)) {
 			rightButton = true;
 		}
 
-		prevX = x(e.getX());
-		prevY = y(e.getY());
+		prevX = e.getX();
+		prevY = e.getY();
 	}
 
 	public void mouseReleased(MouseEvent e) {
 		if(SwingUtilities.isLeftMouseButton(e)) {
 			leftButton = false;
+			this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
 		if(SwingUtilities.isRightMouseButton(e)) {
 			rightButton = false;
@@ -229,13 +232,17 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 	}
 
 	public void mouseDragged(MouseEvent e) {
-		int newX = x(e.getX());
-		int newY = y(e.getY());
-		if(leftButton) {
-			int translateX = (int) (newX-prevX;
-			int translateY = (int) (newY-prevY;
+		int newX = e.getX();
+		int newY = e.getY();
+
+		if(leftButton) { // en cas de translation
+			int translateX = (int) (newX-prevX);
+			int translateY = (int) (newY-prevY);
 			translate(translateX, translateY);
 		}
+
+		prevX = newX;
+		prevY = newY;
 	}
 
 	public void mouseEntered(MouseEvent e) {
