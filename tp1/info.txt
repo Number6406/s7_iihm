@@ -1,0 +1,10 @@
+grapher/fc/Fonction.java
+           FunctionFactory.java | dépend du path jdk/libs/tools.jar
+           Test.java -> main
+
+       /ui/Grapher.java
+           Main.java -> main (lance l'interface et prend des options sur la ligne de commande -> exécuter, propriétés, lignes de commande)
+
+build.xml -> définit les dépendances entre les fichiers
+
+Si hors de l'IDE -> "ant run".
