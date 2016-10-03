@@ -10,6 +10,8 @@ import javax.swing.JPanel;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.Cursor;
 import javax.swing.SwingUtilities;
 
@@ -22,7 +24,7 @@ import static java.lang.Math.*;
 import grapher.fc.*;
 
 // Implémentation des MouseListener et MouseMotionListener pour gérer leur utilisation
-public class Grapher extends JPanel implements MouseListener, MouseMotionListener {
+public class Grapher extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener {
 	static final int MARGIN = 40;
 	static final int STEP = 5;
 
@@ -39,6 +41,8 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 	protected Point dragPoint;
 	protected int selectWidth;
 	protected int selectHeight;
+ 	protected Point prevPoint;
+ 	protected Point basePoint;
 
 	protected int W = 400;
 	protected int H = 300;
@@ -55,6 +59,7 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 		functions = new Vector<Function>();
 		addMouseListener(this);
 		addMouseMotionListener(this);
+		addMouseWheelListener(this);
 	}
 
 	public void add(String expression) {
@@ -219,9 +224,14 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 			select = true;
 			mouseAnchor = e.getPoint();
 		}
+		if(SwingUtilities.isMiddleMouseButton(e)) {
+			middleButton = true;
+			basePoint = e.getPoint();
+		}
 
 		prevX = e.getX();
 		prevY = e.getY();
+		prevPoint = e.getPoint();
 	}
 
 	public void mouseReleased(MouseEvent e) {
@@ -234,9 +244,18 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 			dragged = false;
 		}
 		if(SwingUtilities.isRightMouseButton(e)) {
+			if(!dragged){
+				zoom(e.getPoint(),-5);
+			} else {
+				zoom(mouseAnchor, dragPoint);
+				select = false;
+			}
 			rightButton = false;
-			zoom(mouseAnchor, dragPoint);
-			select = false;
+			dragged = false;
+		}
+		if(SwingUtilities.isMiddleMouseButton(e)) {
+			middleButton = false;
+			dragged = false;
 		}
 		repaint();
 	}
@@ -253,6 +272,7 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 	public void mouseDragged(MouseEvent e) {
 		int newX = e.getX();
 		int newY = e.getY();
+		Point newP = e.getPoint();
 
 		if(leftButton) { // en cas de translation
 			int translateX = (int) (newX-prevX);
@@ -266,6 +286,16 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
       selectHeight = dragPoint.y - mouseAnchor.y;
 
       repaint();
+			dragged = true;
+		}
+		if(middleButton){
+			dragged = true;
+
+			double dist = newP.getX() - prevPoint.getX() + newP.getY() - prevPoint.getY();
+
+			zoom(basePoint,(int) dist);
+
+			prevPoint = newP;
 		}
 
 		prevX = newX;
@@ -278,6 +308,11 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 
 	public void mouseExited(MouseEvent e) {
 
+	}
+
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		int tours = e.getWheelRotation();
+		zoom(e.getPoint(),-5*tours);
 	}
 
 }
