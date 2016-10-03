@@ -34,6 +34,11 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 	protected boolean dragged = false;
 	protected int prevY = 0;
  	protected int prevX = 0;
+	protected boolean select = false;
+	protected Point mouseAnchor;
+	protected Point dragPoint;
+	protected int selectWidth;
+	protected int selectHeight;
 
 	protected int W = 400;
 	protected int H = 300;
@@ -130,6 +135,10 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 		for(double x = -xstep; x > xmin; x -= xstep) { drawXTick(g2, x); }
 		for(double y = ystep; y < ymax; y += ystep)  { drawYTick(g2, y); }
 		for(double y = -ystep; y > ymin; y -= ystep) { drawYTick(g2, y); }
+
+		if(select) {
+			g2.drawRect(mouseAnchor.x, mouseAnchor.y, selectWidth, selectHeight);
+		}
 	}
 
 	protected double dx(int dX) { return  (double)((xmax-xmin)*dX/W); }
@@ -207,6 +216,8 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 		}
 		if(SwingUtilities.isRightMouseButton(e)) {
 			rightButton = true;
+			select = true;
+			mouseAnchor = e.getPoint();
 		}
 
 		prevX = e.getX();
@@ -224,7 +235,10 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 		}
 		if(SwingUtilities.isRightMouseButton(e)) {
 			rightButton = false;
+			zoom(mouseAnchor, dragPoint);
+			select = false;
 		}
+		repaint();
 	}
 
 	// Fonction non utilisées
@@ -245,6 +259,13 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 			int translateY = (int) (newY-prevY);
 			translate(translateX, translateY);
 			dragged = true;
+		}
+		if(rightButton) {
+			dragPoint = e.getPoint();
+			selectWidth = dragPoint.x - mouseAnchor.x;
+      selectHeight = dragPoint.y - mouseAnchor.y;
+
+      repaint();
 		}
 
 		prevX = newX;
