@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.BasicStroke;
 import javax.swing.JPanel;
+import javax.swing.DefaultListModel;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -50,13 +51,13 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 	protected double xmin, xmax;
 	protected double ymin, ymax;
 
-	protected Vector<Function> functions;
+	protected DefaultListModel<Function> functions;
 
 	public Grapher() {
 		xmin = -PI/2.; xmax = 3*PI/2;
 		ymin = -1.5;   ymax = 1.5;
 
-		functions = new Vector<Function>();
+		functions = new DefaultListModel<Function>();
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		addMouseWheelListener(this);
@@ -67,7 +68,7 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 	}
 
 	public void add(Function function) {
-		functions.add(function);
+		functions.addElement(function);
 		repaint();
 	}
 
@@ -116,7 +117,8 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 			Xs[i] = X(x);
 		}
 
-		for(Function f : functions) {
+		for(int j = 0; j < functions.getSize();j++) {
+			Function f = functions.get(j);
 			// y values
 			int Ys[] = new int[N];
 			for(int i = 0; i < N; i++) {
@@ -334,6 +336,12 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		int tours = e.getWheelRotation();
 		zoom(e.getPoint(),-5*tours);
+	}
+	
+	// GETTEURS ET SETTEURS
+	
+	public DefaultListModel<Function> getFunctions(){
+		return functions;
 	}
 
 }

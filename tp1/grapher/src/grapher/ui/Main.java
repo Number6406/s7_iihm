@@ -19,7 +19,7 @@ public class Main extends JFrame {
 			grapher.add(expression);
 		}
 
-		panelList = new JList(expressions);
+		panelList = new JList(grapher.getFunctions());
 		spliter = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,panelList,grapher);
 		spliter.setDividerLocation(100);
 		this.add(spliter);
