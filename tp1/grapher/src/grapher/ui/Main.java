@@ -81,6 +81,7 @@ public class Main extends JFrame implements ListSelectionListener{
 			}
 		});
 	}
+	
 
 	public void valueChanged(ListSelectionEvent e){
 		// Mettre en gras
