@@ -108,4 +108,14 @@ public class Main extends JFrame implements ListSelectionListener{
 			grapher.repaint();
 		}
 	}
+	
+	public void supprimer(){
+		int[] indices = expressionList.getSelectedIndices();
+		DefaultListModel l = grapher.getFunctions();
+		
+		for(int i = indices.length; i <= 0; i--){
+			l.removeElementAt(indices[i]);
+		}
+		
+	}
 }
