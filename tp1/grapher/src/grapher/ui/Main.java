@@ -64,10 +64,20 @@ public class Main extends JFrame implements ListSelectionListener{
 		  }
 		});
 
+		bDel.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				int result = JOptionPane.showConfirmDialog(null, new JPanel(), "Supprimer la fonction ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+
+				if(result == JOptionPane.OK_OPTION) {
+					//fonction de suppression
+				}
+			}
+		});
+
 		tbList.add(bAdd);
 		tbList.add(bDel);
 
-		
+
 		expressionList = new JList(grapher.getFunctions());
 		expressionList.addListSelectionListener(this);
 
@@ -91,7 +101,7 @@ public class Main extends JFrame implements ListSelectionListener{
 			}
 		});
 	}
-	
+
 
 	public void valueChanged(ListSelectionEvent e){
 		// Mettre en gras
