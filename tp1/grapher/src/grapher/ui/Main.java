@@ -4,11 +4,26 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.JList;
 import javax.swing.JSplitPane;
+import javax.swing.JToolBar;
+import javax.swing.JPanel;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.JLabel;
+
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Main extends JFrame {
 
-	JList panelList;
+	JPanel panelExpr;
+	JList expressionList;
 	JSplitPane spliter;
+	JToolBar tbList;
+	JButton bAdd, bDel;
 
 	Main(String title, String[] expressions) {
 		super(title);
@@ -19,8 +34,33 @@ public class Main extends JFrame {
 			grapher.add(expression);
 		}
 
-		panelList = new JList(expressions);
-		spliter = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,panelList,grapher);
+		panelExpr = new JPanel(new BorderLayout());
+
+		expressionList = new JList(expressions);
+		tbList = new JToolBar();
+
+		bAdd = new JButton("+");
+		bDel = new JButton("-");
+
+		bAdd.addActionListener(new ActionListener()
+			{
+			  public void actionPerformed(ActionEvent e)
+			  {
+					JPanel optionPanel = new JPanel(new GridLayout(0, 1));
+					JTextField funField = new JTextField("x");
+	        optionPanel.add(new JLabel("Nouvelle Expression"));
+	        optionPanel.add(funField);
+					int newFunction = JOptionPane.showConfirmDialog(null, optionPanel, "Input", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);;
+			  }
+			});
+
+		tbList.add(bAdd);
+		tbList.add(bDel);
+
+		panelExpr.add(expressionList, BorderLayout.CENTER);
+		panelExpr.add(tbList, BorderLayout.SOUTH);
+
+		spliter = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,panelExpr,grapher);
 		spliter.setDividerLocation(100);
 		this.add(spliter);
 
