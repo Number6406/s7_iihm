@@ -67,7 +67,11 @@ public class Main extends JFrame implements ListSelectionListener{
 		panelExpr.add(tbList, BorderLayout.SOUTH);
 
 		spliter = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,panelExpr,grapher);
-		spliter.setDividerLocation(150);
+		spliter.setDividerLocation(100);
+
+		expressionList = new JList(grapher.getFunctions());
+		expressionList.addListSelectionListener(this);
+
 		this.add(spliter);
 
 		pack();
