@@ -236,7 +236,7 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 
 	public void mouseReleased(MouseEvent e) {
 		if(SwingUtilities.isLeftMouseButton(e)) {
-			if(!dragged){
+			if(!dragged){ // Sans drag = zoom de 5%
 				zoom(e.getPoint(),5);
 			}
 			leftButton = false;
@@ -244,7 +244,7 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 			dragged = false;
 		}
 		if(SwingUtilities.isRightMouseButton(e)) {
-			if(!dragged){
+			if(!dragged){ // Sans drag = dézoom de 5%
 				zoom(e.getPoint(),-5);
 			} else {
 				zoom(mouseAnchor, dragPoint);
@@ -288,7 +288,7 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
       repaint();
 			dragged = true;
 		}
-		if(middleButton){
+		if(middleButton){ // Pour zoomer/Dézoomer en cliquant avec la molette
 			dragged = true;
 
 			double dist = newP.getX() - prevPoint.getX() + newP.getY() - prevPoint.getY();
@@ -309,7 +309,10 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 	public void mouseExited(MouseEvent e) {
 
 	}
-
+	
+	/*
+	 * Zoomer en cas de roulement de la molette
+	 */
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		int tours = e.getWheelRotation();
 		zoom(e.getPoint(),-5*tours);
