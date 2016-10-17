@@ -48,17 +48,22 @@ public class Main extends JFrame implements ListSelectionListener{
 		bAdd = new JButton("+");
 		bDel = new JButton("-");
 
-		bAdd.addActionListener(new ActionListener()
-			{
-			  public void actionPerformed(ActionEvent e)
-			  {
-					JPanel optionPanel = new JPanel(new GridLayout(0, 1));
-					JTextField funField = new JTextField("x");
-	        optionPanel.add(new JLabel("Nouvelle Expression"));
-	        optionPanel.add(funField);
-					int newFunction = JOptionPane.showConfirmDialog(null, optionPanel, "Input", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);;
-			  }
-			});
+		bAdd.addActionListener(new ActionListener() {
+		  public void actionPerformed(ActionEvent e)
+		  {
+				JPanel optionPanel = new JPanel(new GridLayout(0, 1));
+				JTextField funField = new JTextField("x");
+        optionPanel.add(new JLabel("Nouvelle Expression"));
+        optionPanel.add(funField);
+				int result = JOptionPane.showConfirmDialog(null, optionPanel, "Input", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+				if (result == JOptionPane.OK_OPTION) {
+            grapher.add(funField.getText());
+        } else {
+            System.out.println("Cancelled");
+        }
+		  }
+		});
 
 		tbList.add(bAdd);
 		tbList.add(bDel);
