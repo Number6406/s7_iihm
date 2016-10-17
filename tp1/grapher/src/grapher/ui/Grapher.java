@@ -79,8 +79,7 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-
-		System.out.println(font.toString());
+		
 		
 		W = getWidth();
 		H = getHeight();
