@@ -42,7 +42,6 @@ public class Main extends JFrame implements ListSelectionListener{
 
 		panelExpr = new JPanel(new BorderLayout());
 
-		expressionList = new JList(expressions);
 		tbList = new JToolBar();
 
 		bAdd = new JButton("+");
@@ -63,14 +62,16 @@ public class Main extends JFrame implements ListSelectionListener{
 		tbList.add(bAdd);
 		tbList.add(bDel);
 
+		
+		expressionList = new JList(grapher.getFunctions());
+		expressionList.addListSelectionListener(this);
+
 		panelExpr.add(expressionList, BorderLayout.CENTER);
 		panelExpr.add(tbList, BorderLayout.SOUTH);
 
 		spliter = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,panelExpr,grapher);
 		spliter.setDividerLocation(100);
 
-		expressionList = new JList(grapher.getFunctions());
-		expressionList.addListSelectionListener(this);
 
 		this.add(spliter);
 
