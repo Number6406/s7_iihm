@@ -10,9 +10,14 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.KeyStroke;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.event.KeyEvent;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -34,6 +39,19 @@ public class Main extends JFrame implements ListSelectionListener{
 	Main(String title, String[] expressions) {
 		super(title);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+		JMenuBar menuBar = new JMenuBar();
+		JMenu menuExpr = new JMenu("Expression");
+		JMenuItem addM = new JMenuItem("Add");
+		JMenuItem delM = new JMenuItem("Delete");
+
+		menuExpr.add(addM);
+		addM.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
+		menuExpr.add(delM);
+		delM.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.CTRL_MASK));
+
+		menuBar.add(menuExpr);
+		setJMenuBar(menuBar);
 
 		grapher = new Grapher();
 		for(String expression : expressions) {
