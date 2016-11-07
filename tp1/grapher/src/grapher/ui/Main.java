@@ -66,42 +66,19 @@ public class Main extends JFrame implements ListSelectionListener{
 		bDel = new JButton("-");
 
 		bAdd.addActionListener(new ActionListener() {
-		  public void actionPerformed(ActionEvent e)
-		  {
-				JPanel optionPanel = new JPanel(new GridLayout(0, 1));
-				JTextField funField = new JTextField("x");
-        optionPanel.add(new JLabel("Nouvelle Expression"));
-        optionPanel.add(funField);
-				int result = JOptionPane.showConfirmDialog(null, optionPanel, "Input", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
-				if (result == JOptionPane.OK_OPTION) {
-            grapher.add(funField.getText());
-        } else {
-            System.out.println("Cancelled");
-        }
-		  }
+				public void actionPerformed(ActionEvent e) { addFun(); }
 		});
 
 		bDel.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e) {
-				DefaultListModel a_suppr = new DefaultListModel();
-				
-				int[] indices = expressionList.getSelectedIndices();
-				DefaultListModel l = grapher.getFunctions();
-				for(int i : indices){
-					a_suppr.addElement(l.getElementAt(i));
-				}
-				JPanel nomDesFonctions = new JPanel();
-				JLabel afficher = new JLabel(a_suppr.toString());
-				nomDesFonctions.add(afficher);
-				int result = JOptionPane.showConfirmDialog(null, nomDesFonctions, "Supprimer la/les fonction ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
-				
-				if(result == JOptionPane.OK_OPTION) {
-					//fonction de suppression
-					supprimer(a_suppr,l);
-					repaint();
-				}
-			}
+				public void actionPerformed(ActionEvent e) { delFun(); }
+		});
+
+		addM.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) { addFun(); }
+		});
+
+		delM.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) { delFun(); }
 		});
 
 		tbList.add(bAdd);
@@ -121,6 +98,40 @@ public class Main extends JFrame implements ListSelectionListener{
 		this.add(spliter);
 
 		pack();
+	}
+
+	public void addFun() {
+			JPanel optionPanel = new JPanel(new GridLayout(0, 1));
+			JTextField funField = new JTextField("x");
+			optionPanel.add(new JLabel("Nouvelle Expression"));
+			optionPanel.add(funField);
+			int result = JOptionPane.showConfirmDialog(null, optionPanel, "Input", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+			if (result == JOptionPane.OK_OPTION) {
+					grapher.add(funField.getText());
+			} else {
+					System.out.println("Cancelled");
+			}
+	}
+
+	public void delFun() {
+			DefaultListModel a_suppr = new DefaultListModel();
+
+			int[] indices = expressionList.getSelectedIndices();
+			DefaultListModel l = grapher.getFunctions();
+			for(int i : indices){
+				a_suppr.addElement(l.getElementAt(i));
+			}
+			JPanel nomDesFonctions = new JPanel();
+			JLabel afficher = new JLabel(a_suppr.toString());
+			nomDesFonctions.add(afficher);
+			int result = JOptionPane.showConfirmDialog(null, nomDesFonctions, "Supprimer la/les fonction ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+
+			if(result == JOptionPane.OK_OPTION) {
+				//fonction de suppression
+				supprimer(a_suppr,l);
+				repaint();
+			}
 	}
 
 	public static void main(String[] argv) {
@@ -148,11 +159,11 @@ public class Main extends JFrame implements ListSelectionListener{
 			grapher.repaint();
 		}
 	}
-	
+
 	public void supprimer(DefaultListModel a_suppr,DefaultListModel l){
 		for(int i = 0; i < a_suppr.getSize(); i++){
 			l.removeElement(a_suppr.getElementAt(i));
 		}
-		
+
 	}
 }
