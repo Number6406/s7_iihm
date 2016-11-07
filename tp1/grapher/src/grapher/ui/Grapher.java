@@ -59,6 +59,7 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 
 	protected DefaultListModel<Function> functions;
 	protected Vector<Integer> font;
+	protected Vector<Color> colors;
 
 	public Grapher() {
 		xmin = -PI/2.; xmax = 3*PI/2;
@@ -66,6 +67,7 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 
 		functions = new DefaultListModel<Function>();
 		font = new Vector<Integer>();
+		colors = new Vector<Color>();
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		addMouseWheelListener(this);
@@ -78,6 +80,7 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 	public void add(Function function) {
 		functions.addElement(function);
 		font.add(0);
+		colors.add(Color.BLACK);
 		repaint();
 	}
 
@@ -139,8 +142,11 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 				g2.setStroke(new BasicStroke(3));
 			}
 			
+			
+			g2.setPaint(colors.get(j));
 			g2.drawPolyline(Xs, Ys, N);
 			g2.setStroke(new BasicStroke(1));
+			g2.setPaint(Color.BLACK);
 		}
 
 		g2.setClip(null);
@@ -429,6 +435,14 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 
 	public void setFont(int i,int f){
 		this.font.set(i,f);
+	}
+	
+	public void setColor(int i, Color c){
+		this.colors.set(i,c);
+	}
+	
+	public void setColor(int i, int r, int g, int b){
+		this.colors.set(i,new Color(r,g,b));
 	}
 
 }
