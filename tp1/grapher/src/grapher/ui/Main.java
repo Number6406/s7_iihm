@@ -84,10 +84,22 @@ public class Main extends JFrame implements ListSelectionListener{
 
 		bDel.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				int result = JOptionPane.showConfirmDialog(null, new JPanel(), "Supprimer la fonction ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
-
+				DefaultListModel a_suppr = new DefaultListModel();
+				
+				int[] indices = expressionList.getSelectedIndices();
+				DefaultListModel l = grapher.getFunctions();
+				for(int i : indices){
+					a_suppr.addElement(l.getElementAt(i));
+				}
+				JPanel nomDesFonctions = new JPanel();
+				JLabel afficher = new JLabel(a_suppr.toString());
+				nomDesFonctions.add(afficher);
+				int result = JOptionPane.showConfirmDialog(null, nomDesFonctions, "Supprimer la/les fonction ?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+				
 				if(result == JOptionPane.OK_OPTION) {
 					//fonction de suppression
+					supprimer(a_suppr,l);
+					repaint();
 				}
 			}
 		});
@@ -135,5 +147,12 @@ public class Main extends JFrame implements ListSelectionListener{
 			}
 			grapher.repaint();
 		}
+	}
+	
+	public void supprimer(DefaultListModel a_suppr,DefaultListModel l){
+		for(int i = 0; i < a_suppr.getSize(); i++){
+			l.removeElement(a_suppr.getElementAt(i));
+		}
+		
 	}
 }
