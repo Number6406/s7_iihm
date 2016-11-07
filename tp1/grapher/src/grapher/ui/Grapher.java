@@ -21,29 +21,35 @@ import java.awt.Point;
 import java.util.Vector;
 
 import static java.lang.Math.*;
+import static java.lang.System.*;
 
 import grapher.fc.*;
 
 // Implémentation des MouseListener et MouseMotionListener pour gérer leur utilisation
 public class Grapher extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener {
+	
+	// ENUM DES ETATS
+	enum State {
+		IDLE, LEFT_CLICK, RIGHT_CLICK, SELECT_ZONE, DRAG, MIDDLE_CLICK, ZOOM_MIDDLE
+	};
+	
+	protected State state = State.IDLE;
+	
+	protected Point anchor_point;
+	protected Point mouse_point;
+	protected Point previous_point;
+	
+	
 	static final int MARGIN = 40;
 	static final int STEP = 5;
 
 	static final BasicStroke dash = new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1.f, new float[] { 4.f, 4.f }, 0.f);
 
-	protected boolean leftButton = false;
-	protected boolean rightButton = false;
-	protected boolean middleButton = false;
-	protected boolean dragged = false;
-	protected int prevY = 0;
- 	protected int prevX = 0;
-	protected boolean select = false;
-	protected Point mouseAnchor;
-	protected Point dragPoint;
 	protected int selectWidth;
 	protected int selectHeight;
- 	protected Point prevPoint;
- 	protected Point basePoint;
+	protected int translateX;
+	protected int translateY;
+	protected double dist;
 
 	protected int W = 400;
 	protected int H = 300;
@@ -152,26 +158,26 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 		for(double y = ystep; y < ymax; y += ystep)  { drawYTick(g2, y); }
 		for(double y = -ystep; y > ymin; y -= ystep) { drawYTick(g2, y); }
 
-		if(select) {
+		if(state == State.SELECT_ZONE) {
 			Point debut = new Point();
 			Point fin = new Point();
-			if(dragPoint.x < mouseAnchor.x) {
-				debut.x = dragPoint.x;
-				fin.x = mouseAnchor.x;
+			if(mouse_point.x < anchor_point.x) {
+				debut.x = mouse_point.x;
+				fin.x = anchor_point.x;
 			} else {
-				debut.x = mouseAnchor.x;
-				fin.x = dragPoint.x;
+				debut.x = anchor_point.x;
+				fin.x = mouse_point.x;
 			}
-			if(dragPoint.y < mouseAnchor.y) {
-				debut.y = dragPoint.y;
-				fin.y = mouseAnchor.y;
+			if(mouse_point.y < anchor_point.y) {
+				debut.y = mouse_point.y;
+				fin.y = anchor_point.y;
 			} else {
-				debut.y = mouseAnchor.y;
-				fin.y = dragPoint.y;
+				debut.y = anchor_point.y;
+				fin.y = mouse_point.y;
 			}
 
 			selectWidth = fin.x - debut.x;
-      selectHeight = fin.y - debut.y;
+			selectHeight = fin.y - debut.y;
 
 			g2.drawRect(debut.x, debut.y, selectWidth, selectHeight);
 		}
@@ -245,47 +251,75 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 		repaint();
 	}
 
-	public void mousePressed(MouseEvent e) {
-		if(SwingUtilities.isLeftMouseButton(e)) {
-			leftButton = true;
-			this.setCursor(new Cursor(Cursor.HAND_CURSOR));
+	public void mousePressed(MouseEvent e) {	
+		switch(state){
+			case IDLE :
+				if(SwingUtilities.isLeftMouseButton(e)) {
+					state = State.LEFT_CLICK;
+				}
+				if(SwingUtilities.isRightMouseButton(e)) {
+					state = State.RIGHT_CLICK;
+				}
+				if(SwingUtilities.isMiddleMouseButton(e)) {
+					state = State.MIDDLE_CLICK;
+				}
+				anchor_point = e.getPoint();
+				break;
+			case LEFT_CLICK :
+				break;
+			case RIGHT_CLICK :
+				break;
+			case MIDDLE_CLICK :
+				break;
+			case SELECT_ZONE :
+				break;
+			case DRAG :
+				break;
+			case ZOOM_MIDDLE :
+				break;
+			default : System.out.println("Evenement inattendu... lol");// Traiter erreurs
 		}
-		if(SwingUtilities.isRightMouseButton(e)) {
-			rightButton = true;
-			mouseAnchor = e.getPoint();
-		}
-		if(SwingUtilities.isMiddleMouseButton(e)) {
-			middleButton = true;
-			basePoint = e.getPoint();
-		}
-
-		prevX = e.getX();
-		prevY = e.getY();
-		prevPoint = e.getPoint();
 	}
 
 	public void mouseReleased(MouseEvent e) {
-		if(SwingUtilities.isLeftMouseButton(e)) {
-			if(!dragged){ // Sans drag = zoom de 5%
-				zoom(e.getPoint(),5);
-			}
-			leftButton = false;
-			this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-			dragged = false;
-		}
-		if(SwingUtilities.isRightMouseButton(e)) {
-			if(!dragged){ // Sans drag = dézoom de 5%
-				zoom(e.getPoint(),-5);
-			} else {
-				zoom(mouseAnchor, dragPoint);
-				select = false;
-			}
-			rightButton = false;
-			dragged = false;
-		}
-		if(SwingUtilities.isMiddleMouseButton(e)) {
-			middleButton = false;
-			dragged = false;
+		switch(state){
+			case IDLE :
+				break;
+			case LEFT_CLICK :
+				if(e.getButton()==MouseEvent.BUTTON1) {
+					zoom(anchor_point,5);
+					state = State.IDLE;
+				}
+				break;
+			case RIGHT_CLICK :
+				if(e.getButton()==MouseEvent.BUTTON3) {
+					zoom(anchor_point,-5);
+					state = State.IDLE;
+				}
+				break;
+			case MIDDLE_CLICK :
+				if(e.getButton()==MouseEvent.BUTTON2) {
+					state = State.IDLE;
+				}
+				break;
+			case SELECT_ZONE :
+				if(e.getButton()==MouseEvent.BUTTON3) {
+					zoom(anchor_point,mouse_point);
+					state = State.IDLE;
+				}
+				break;
+			case DRAG :
+				if(e.getButton()==MouseEvent.BUTTON1) {
+					this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+					state = State.IDLE;
+				}
+				break;
+			case ZOOM_MIDDLE :
+				if(e.getButton()==MouseEvent.BUTTON2) {
+					state = State.IDLE;
+				}
+				break;
+			default : System.out.println("Evenement inattendu... lol");// Traiter erreurs
 		}
 		repaint();
 	}
@@ -300,35 +334,49 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 	}
 
 	public void mouseDragged(MouseEvent e) {
-		int newX = e.getX();
-		int newY = e.getY();
-		Point newP = e.getPoint();
-
-		if(leftButton) { // en cas de translation
-			int translateX = (int) (newX-prevX);
-			int translateY = (int) (newY-prevY);
-			translate(translateX, translateY);
-			dragged = true;
+		switch(state){
+			case IDLE :
+				break;
+			case LEFT_CLICK :
+				mouse_point = e.getPoint();
+				translateX = (int) (mouse_point.getX() - anchor_point.getX());
+				translateY = (int) (mouse_point.getY() - anchor_point.getY());
+				anchor_point = mouse_point;
+				translate(translateX, translateY);
+				this.setCursor(new Cursor(Cursor.HAND_CURSOR));
+				state = State.DRAG;
+				break;
+			case RIGHT_CLICK :
+				mouse_point = e.getPoint();
+				state = State.SELECT_ZONE;
+				repaint();
+				break;
+			case MIDDLE_CLICK :
+				mouse_point = e.getPoint();
+				dist = mouse_point.getX() - anchor_point.getX() + mouse_point.getY() - anchor_point.getY();
+				zoom(anchor_point,(int) dist);
+				previous_point = mouse_point;
+				state = State.ZOOM_MIDDLE;
+				break;
+			case SELECT_ZONE :
+				mouse_point = e.getPoint();
+				repaint();
+				break;
+			case DRAG :
+				mouse_point = e.getPoint();
+				translateX = (int) (mouse_point.getX() - anchor_point.getX());
+				translateY = (int) (mouse_point.getY() - anchor_point.getY());
+				anchor_point = mouse_point;
+				translate(translateX, translateY);
+				break;
+			case ZOOM_MIDDLE :
+				mouse_point = e.getPoint();
+				dist = mouse_point.getX() - previous_point.getX() + mouse_point.getY() - previous_point.getY();
+				zoom(anchor_point,(int) dist);
+				previous_point = mouse_point;
+				break;
+			default : System.out.println("Evenement inattendu... lol");// Traiter erreurs
 		}
-		if(rightButton) {
-			select = true;
-			dragPoint = e.getPoint();
-      repaint();
-			dragged = true;
-		}
-		
-		if(middleButton){ // Pour zoomer/Dézoomer en cliquant avec la molette
-			dragged = true;
-
-			double dist = newP.getX() - prevPoint.getX() + newP.getY() - prevPoint.getY();
-
-			zoom(basePoint,(int) dist);
-
-			prevPoint = newP;
-		}
-
-		prevX = newX;
-		prevY = newY;
 	}
 
 	public void mouseEntered(MouseEvent e) {
@@ -343,8 +391,25 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 	 * Zoomer en cas de roulement de la molette
 	 */
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		int tours = e.getWheelRotation();
-		zoom(e.getPoint(),-5*tours);
+		switch(state){
+			case IDLE :
+				int tours = e.getWheelRotation();
+				zoom(e.getPoint(),-5*tours);
+				break;
+			case LEFT_CLICK :
+				break;
+			case RIGHT_CLICK :
+				break;
+			case MIDDLE_CLICK :
+				break;
+			case SELECT_ZONE :
+				break;
+			case DRAG :
+				break;
+			case ZOOM_MIDDLE :
+				break;
+			default : System.out.println("Evenement inattendu... lol");// Traiter erreurs
+		}
 	}
 	
 	// GETTEURS ET SETTEURS
