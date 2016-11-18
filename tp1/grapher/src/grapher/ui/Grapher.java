@@ -35,16 +35,19 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 	
 	protected State state = State.IDLE;
 	
+	// Définition de points pour les sauvegarder
 	protected Point anchor_point;
 	protected Point mouse_point;
 	protected Point previous_point;
 	
-	
+	// Constantes
 	static final int MARGIN = 40;
 	static final int STEP = 5;
-
+	
+	// Définition du trait pour le tracé
 	static final BasicStroke dash = new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1.f, new float[] { 4.f, 4.f }, 0.f);
-
+	
+	
 	protected int selectWidth;
 	protected int selectHeight;
 	protected int translateX;
@@ -61,6 +64,10 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 	protected Vector<Integer> font;
 	protected Vector<Color> colors;
 
+	/** Lors de la création du grapher on instancie la liste des fonctions
+	 * la liste des polices (gras ou pas pour la selection)
+	 * et on ajoute les listener pour l'interaction 
+	 */
 	public Grapher() {
 		xmin = -PI/2.; xmax = 3*PI/2;
 		ymin = -1.5;   ymax = 1.5;
