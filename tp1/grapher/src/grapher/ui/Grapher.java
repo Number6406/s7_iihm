@@ -28,11 +28,12 @@ import grapher.fc.*;
 // Implémentation des MouseListener et MouseMotionListener pour gérer leur utilisation
 public class Grapher extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener {
 	
-	// ENUM DES ETATS
+	// Enumération des états de la machine à états
 	enum State {
 		IDLE, LEFT_CLICK, RIGHT_CLICK, SELECT_ZONE, DRAG, MIDDLE_CLICK, ZOOM_MIDDLE
 	};
 	
+	// Etat courant de la machine
 	protected State state = State.IDLE;
 	
 	// Définition de points pour les sauvegarder
@@ -60,8 +61,11 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 	protected double xmin, xmax;
 	protected double ymin, ymax;
 
+	// Liste des fonctions (c'est une defaultListModel pour pouvoir l'utiliser aussi dans le repaint)
 	protected DefaultListModel<Function> functions;
+	// Vecteur contenant un entier correspondant à si la courbe est affichée en gras ou non
 	protected Vector<Integer> font;
+	// Vecteur des couleurs correspondant à chaque fonction (pour extension)
 	protected Vector<Color> colors;
 
 	/** Lors de la création du grapher on instancie la liste des fonctions
@@ -79,11 +83,18 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 		addMouseMotionListener(this);
 		addMouseWheelListener(this);
 	}
-
+	
+	/**
+	 * ajoute une fonction dans le grapher à partir de la chaine de caractères
+	 * passée en paramètre
+	 */
 	public void add(String expression) {
 		add(FunctionFactory.createFunction(expression));
 	}
-
+	
+	/**
+	 * Ajoute une fonction au tableau des fonctions en mettant sa couleur à noir
+	 */
 	public void add(Function function) {
 		functions.addElement(function);
 		font.add(0);
@@ -92,7 +103,12 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 	}
 
 	public Dimension getPreferredSize() { return new Dimension(W, H); }
-
+	
+	/**
+	 * Méthode paintComponent qui est appelée lorsque l'on appele repaint()
+	 * Elle permet notamment d'afficher le rectangle en pointillès lors
+	 * du drag avec le clic droit
+	 */
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
@@ -145,17 +161,24 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 				Ys[i] = Y(f.y(xs[i]));
 			}
 			
+			/* si font = 1 alors mettre le trait en gras */
 			if(font.get(j)==1){
 				g2.setStroke(new BasicStroke(3));
+			} else {
+				g2.setStroke(new BasicStroke(1));
 			}
 			
-			
+			// Mettre la couleur
 			g2.setPaint(colors.get(j));
+			// Dessiner
 			g2.drawPolyline(Xs, Ys, N);
-			g2.setStroke(new BasicStroke(1));
-			g2.setPaint(Color.BLACK);
+			
 		}
-
+	
+		// Remettre les paramètres pour les axes
+		g2.setStroke(new BasicStroke(1));
+		g2.setPaint(Color.BLACK);
+		
 		g2.setClip(null);
 
 		// axes
@@ -170,7 +193,8 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 		for(double x = -xstep; x > xmin; x -= xstep) { drawXTick(g2, x); }
 		for(double y = ystep; y < ymax; y += ystep)  { drawYTick(g2, y); }
 		for(double y = -ystep; y > ymin; y -= ystep) { drawYTick(g2, y); }
-
+	
+		// Dessin du rectangle pointillé si necessaire
 		if(state == State.SELECT_ZONE) {
 			Point debut = new Point();
 			Point fin = new Point();
@@ -263,7 +287,14 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 		ymin = min(y0, y1); ymax = max(y0, y1);
 		repaint();
 	}
-
+	
+	// LISTENERS
+	
+	/**
+	 * Lors d'un clic avec la souris on regarde l'état dans lequel on 
+	 * se trouve, puis on regarde quel boutton de la souris a été pressé
+	 * pour savoir quelle action effectuer et dasn quel prochain état aller
+	 */
 	public void mousePressed(MouseEvent e) {	
 		switch(state){
 			case IDLE :
@@ -293,7 +324,15 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 			default : System.out.println("Evenement inattendu... lol");// Traiter erreurs
 		}
 	}
-
+	
+	/**
+	 * Lorsqu'un boutton est relaché, on regarde l'état dans lequel on se trouve
+	 * puis selon le bouton correspondant à l'événement on effectue la transition
+	 * 
+	 * Ici on doit utiliser getbutton() et MouseEvent.BUTTON1,2 ou 3
+	 * Car isLeftButton et le autres methode peuvent renvoyer vrai si
+	 * le boutton est encore pressé et non pas relaché.
+	 */
 	public void mouseReleased(MouseEvent e) {
 		switch(state){
 			case IDLE :
@@ -337,15 +376,20 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 		repaint();
 	}
 
-	// Fonction non utilisées
+	// Fonction non utilisée
 	public void mouseClicked(MouseEvent e) {
 
 	}
 
+	// Fonction non utilisée
 	public void mouseMoved(MouseEvent e) {
 
 	}
-
+	
+	/**
+	 * Lorsque la souris bouge et selon l'état dans lequel on est
+	 * on effectue l'action et le changement d'état adéquat
+	 */
 	public void mouseDragged(MouseEvent e) {
 		switch(state){
 			case IDLE :
@@ -400,7 +444,7 @@ public class Grapher extends JPanel implements MouseListener, MouseMotionListene
 
 	}
 	
-	/*
+	/**
 	 * Zoomer en cas de roulement de la molette
 	 */
 	public void mouseWheelMoved(MouseWheelEvent e) {
