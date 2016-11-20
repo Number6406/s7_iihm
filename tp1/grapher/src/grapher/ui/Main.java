@@ -14,6 +14,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
+import javax.swing.JTable;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -31,6 +32,7 @@ public class Main extends JFrame implements ListSelectionListener{
 
 	JPanel panelExpr;
 	JList expressionList;
+
 	JSplitPane spliter;
 	JToolBar tbList;
 	JButton bAdd, bDel;
