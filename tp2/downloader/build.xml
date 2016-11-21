@@ -38,7 +38,7 @@
 	<target name="run" depends="jar">
 		<java classname="${main-class}" fork="true">
 			<classpath refid="project.class.path" />
-			<arg value="ftp://anonymous:toto@ftp.oleane.fr/pub/linux/kernel/v2.6/linux-2.6.39.tar.gz" />
+			<arg value="http://iihm.imag.fr/blanch/RICM4/IHM/tps/3-notification/index.html" />
 		</java>
 	</target>
 	
