@@ -9,8 +9,8 @@ import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import java.beans.PropertyChangeSupport;
-import java.beans.PropertyChangeListener;
+//import java.beans.PropertyChangeSupport;
+//import java.beans.PropertyChangeListener;
 import javax.swing.SwingWorker;
 
 
@@ -25,8 +25,8 @@ public class Downloader extends SwingWorker<String, Object> {
 	File temp;
 	FileOutputStream out;
 	
-	private int _progress;
-	private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+	//private int _progress;
+	//private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 	
 	public Downloader(String uri) {
 		try {
@@ -101,6 +101,7 @@ public class Downloader extends SwingWorker<String, Object> {
 
     @Override
     protected String doInBackground() throws Exception {
-        return this.download();
+    	String filename = this.download();
+        return filename;
     }
 }

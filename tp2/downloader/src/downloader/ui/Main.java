@@ -8,17 +8,25 @@ import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 
 import downloader.fc.Downloader;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class Main extends JFrame{
 	
+	static List<JProgressBar> progs;
+	static List<Downloader> dls;
+	
 	JProgressBar prog;
+	static Downloader dl;
 	
 	public static void main(String argv[]) {
 		final String[] urls = argv;
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				new Main("Download", urls);
+				new Main("Download", urls).setVisible(true);
+				begin_download();
 			}
 		});
 	}
@@ -26,12 +34,13 @@ public class Main extends JFrame{
 	Main(String title, String[] urls) {
 		
 		super(title);
-                this.setVisible(true);
-                this.setSize(400, 400);
+        this.setSize(400, 400);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
+		dls = new ArrayList<Downloader>();
+		progs = new ArrayList<JProgressBar>();
+		
 		for(String url : urls){
-			final Downloader dl;
 			try {
 				dl = new Downloader(url);
 			}
@@ -40,30 +49,41 @@ public class Main extends JFrame{
 				continue;
 			}
 			
+			dls.add(dl);
+			
+
+			//final JProgressBar prog;
 			prog = new JProgressBar(0, 100);
 			prog.setValue(dl.getProgress());
 			prog.setStringPainted(true);
 			this.add(prog);
+			progs.add(prog);
                         
 			dl.addPropertyChangeListener(new  PropertyChangeListener() {
 				public void propertyChange(PropertyChangeEvent evt) {
-                                    System.out.print("." + dl.getProgress());				
-                                    prog.setValue(dl.getProgress());
+                        System.out.print("." + dl.getProgress());				
+                        prog.setValue(dl.getProgress());
 				}
 			});
-                        
-                        String filename = "Erreur de téléchargement";
-                        dl.execute();
-                        try {
-                            filename = dl.get();    
-                        } catch(InterruptedException e) {
-                            System.err.println(e);
-                        } catch(ExecutionException e) {
-                            System.err.println(e);
-                        }
-                        
-                        
-			System.out.format("Downloaded into %s\n", filename);
+			
+			revalidate();
 		}
+	}
+
+	private static void begin_download() {
+		String filename = "Erreur de téléchargement";
+		/*for( int i = 1; i < dls.size(); i++) { */
+	        dl.execute();
+	        try {
+	            filename = dl.get();    
+	        } catch(InterruptedException e) {
+	            System.err.println(e);
+	        } catch(ExecutionException e) {
+	            System.err.println(e);
+	        }
+	        
+	        System.out.format("Downloaded into %s\n", filename);
+		/*}*/
+		
 	}
 }
