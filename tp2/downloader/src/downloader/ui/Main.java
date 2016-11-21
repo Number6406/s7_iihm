@@ -17,7 +17,7 @@ public class Main extends JFrame{
 		final String[] urls = argv;
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				new Main("Download", urls).setVisible(true);
+				new Main("Download", urls);
 			}
 		});
 	}
@@ -25,7 +25,9 @@ public class Main extends JFrame{
 	Main(String title, String[] urls) {
 		
 		super(title);
+                this.setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+                pack();
 		
 		for(String url : urls){
 			final Downloader dl;
@@ -38,17 +40,23 @@ public class Main extends JFrame{
 			}
 			
 			prog = new JProgressBar(0, 100);
-			prog.setValue(0);
+			prog.setValue(dl.getProgress());
 			prog.setStringPainted(true);
 			this.add(prog);
-			
+                        pack();
+                        
 			dl.addPropertyChangeListener(new  PropertyChangeListener() {
 				public void propertyChange(PropertyChangeEvent evt) {
-					prog.setValue(dl.getProgress());
+                                    System.out.print("." + dl.getProgress());				
+                                    prog.setValue(dl.getProgress());
 				}
 			});
-			
-			pack();
+                        
+                        String filename;
+                        DownloadThread dt = new DownloadThread(dl);
+                        dt.start();
+                        filename = dt.getFileName();
+			System.out.format("Downloaded into %s\n", filename);
 		}
 	}
 }
