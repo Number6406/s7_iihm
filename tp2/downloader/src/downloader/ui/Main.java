@@ -26,8 +26,8 @@ public class Main extends JFrame{
 		
 		super(title);
                 this.setVisible(true);
+                this.setSize(400, 400);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-                pack();
 		
 		for(String url : urls){
 			final Downloader dl;
@@ -43,7 +43,6 @@ public class Main extends JFrame{
 			prog.setValue(dl.getProgress());
 			prog.setStringPainted(true);
 			this.add(prog);
-                        pack();
                         
 			dl.addPropertyChangeListener(new  PropertyChangeListener() {
 				public void propertyChange(PropertyChangeEvent evt) {
