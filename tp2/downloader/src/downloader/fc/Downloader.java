@@ -11,9 +11,10 @@ import java.io.IOException;
 
 import java.beans.PropertyChangeSupport;
 import java.beans.PropertyChangeListener;
+import javax.swing.SwingWorker;
 
 
-public class Downloader {
+public class Downloader extends SwingWorker<String, Object> {
 	public static final int CHUNK_SIZE = 1024;
 	
 	URL url;
@@ -78,7 +79,8 @@ public class Downloader {
 		temp.renameTo(new File(filename));
 		return filename;
 	}
-	
+        
+	/*
 	public int getProgress() {
 		return _progress;
 	}
@@ -95,5 +97,10 @@ public class Downloader {
 	
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		pcs.removePropertyChangeListener(listener);
-	}
+	}*/
+
+    @Override
+    protected String doInBackground() throws Exception {
+        return this.download();
+    }
 }

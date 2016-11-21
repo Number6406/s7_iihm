@@ -8,6 +8,7 @@ import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 
 import downloader.fc.Downloader;
+import java.util.concurrent.ExecutionException;
 
 public class Main extends JFrame{
 	
@@ -51,10 +52,17 @@ public class Main extends JFrame{
 				}
 			});
                         
-                        String filename;
-                        DownloadThread dt = new DownloadThread(dl);
-                        dt.start();
-                        filename = dt.getFileName();
+                        String filename = "Erreur de téléchargement";
+                        dl.execute();
+                        try {
+                            filename = dl.get();    
+                        } catch(InterruptedException e) {
+                            System.err.println(e);
+                        } catch(ExecutionException e) {
+                            System.err.println(e);
+                        }
+                        
+                        
 			System.out.format("Downloaded into %s\n", filename);
 		}
 	}
