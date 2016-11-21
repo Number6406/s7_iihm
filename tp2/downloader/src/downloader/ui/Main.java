@@ -1,32 +1,18 @@
 
+public class Main extends JFrame{
+	
+	public static void main(String argv[]) {
+		for(String url: argv) {
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					new Main("Download", url).setVisible(true);
+				}
+			});
+		}
+	}
 
-public static void main(String argv[]) {
-	for(String url: argv) {
-		Downloader downloader;
-		try {
-			downloader = new Downloader(url);
-		}
-		catch(RuntimeException e) {
-			System.err.format("skipping %s %s\n", url, e);
-			continue;
-		}
-		System.out.format("Downloading %s:", downloader);
-		
-		downloader.addPropertyChangeListener(new  PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
-				System.out.print(".");
-				System.out.flush();
-			}
-		});
-		
-		String filename;
-		try {
-			filename = downloader.download();
-		}
-		catch(InterruptedException e) {
-			System.err.println("failed!");
-			continue;
-		}
-		System.out.format("into %s\n", filename);
+	Main(String title, String[] url) {
+		super(title);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 }
