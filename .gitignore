@@ -20,3 +20,5 @@ hs_err_pid*
 */.nb-gradle/
 /tp2/downloader/nbproject/private/
 /tp2/downloader/build/
+
+tp2/downloader/.idea/*
