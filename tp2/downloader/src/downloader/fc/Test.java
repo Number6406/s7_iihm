@@ -4,6 +4,8 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 
 import downloader.fc.Downloader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Test {
 	public static void main(String argv[]) {
@@ -25,14 +27,12 @@ public class Test {
 				}
 			});
 			
-			String filename;
-			try {
-				filename = downloader.download();
-			}
-			catch(InterruptedException e) {
-				System.err.println("failed!");
-				continue;
-			}
+			String filename = "error";
+                    try {
+                        filename = downloader.doInBackground();
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
+                    }
 			System.out.format("into %s\n", filename);
 		}
 	}

@@ -14,7 +14,7 @@ import java.io.IOException;
 import javax.swing.SwingWorker;
 
 
-public class Downloader extends SwingWorker<String, Object> {
+public class Downloader extends SwingWorker<String, Void> {
 	public static final int CHUNK_SIZE = 1024;
 	
 	URL url;
@@ -50,7 +50,7 @@ public class Downloader extends SwingWorker<String, Object> {
 		return url.toString();
 	}
 	
-	public String download() throws InterruptedException {
+	public String doInBackground() throws InterruptedException {
 		byte buffer[] = new byte[CHUNK_SIZE];
 		int size = 0;
 		int count = 0;
@@ -98,10 +98,11 @@ public class Downloader extends SwingWorker<String, Object> {
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		pcs.removePropertyChangeListener(listener);
 	}*/
-
+    
+    /*
     @Override
     protected String doInBackground() throws Exception {
-    	String filename = this.download();
+        String filename = this.download();
         return filename;
-    }
+    }*/
 }

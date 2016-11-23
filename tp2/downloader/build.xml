@@ -11,8 +11,7 @@
 	</target>
 	<target name="compile">
 		<mkdir dir="${classes.dir}" />
-		<javac srcdir="${src.dir}" destdir="${classes.dir}"
-		       encoding="UTF-8" includeantruntime="false" />
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" encoding="UTF-8" includeantruntime="false" />
 	</target>
 	
 	<target name="jar" depends="compile">

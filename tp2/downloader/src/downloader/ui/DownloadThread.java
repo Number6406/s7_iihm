@@ -23,11 +23,7 @@ public class DownloadThread extends Thread {
     
     @Override
     public void run() {
-        try {
-            this.filename = downloader.download();
-        } catch (InterruptedException e) {
-            System.err.println("failed!");
-        }
+        downloader.execute();
     }
     
     public String getFileName() {
