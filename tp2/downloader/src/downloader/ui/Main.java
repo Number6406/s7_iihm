@@ -135,7 +135,7 @@ public class Main extends JFrame{
                 }
             });
             
-            JButton stop = new JButton("◼");
+            JButton stop = new JButton("◻");
             stop.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
