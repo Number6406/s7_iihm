@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -126,19 +125,31 @@ public class Main extends JFrame{
                     }
                 }
             });
-            JButton delete = new JButton("X");
-            delete.addActionListener(new ActionListener() {
+            JButton suppr = new JButton("X");
+            suppr.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    panel_dl.remove(ligne);
+                    panel_dl.revalidate();
+                    panel_dl.repaint();
+                }
+            });
+            
+            JButton stop = new JButton("◼");
+            stop.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     dl.cancel(true);
                     prog.setString("Annulé");
                     prog.setValue(0);
-                    play_pause.setEnabled(false);
-                    delete.setEnabled(false);
+                    boutons.remove(play_pause);
+                    boutons.remove(stop);
+                    boutons.add(suppr);
+                    boutons.revalidate();
                 }
             });
             boutons.add(play_pause);
-            boutons.add(delete);
+            boutons.add(stop);
 
 
             download.add(label_url,BorderLayout.NORTH);
@@ -154,8 +165,10 @@ public class Main extends JFrame{
                     System.out.print("." + dl.getProgress());
                     prog.setValue(dl.getProgress());
                     if(dl.getProgress()==100){
-                        play_pause.setEnabled(false);
-                        delete.setEnabled(false);
+                        boutons.remove(play_pause);
+                        boutons.remove(stop);
+                        boutons.add(suppr);
+                        boutons.revalidate();
                         try {
                             String filename = dl.get();
                             System.out.println("downloaded into " + filename);
