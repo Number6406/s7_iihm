@@ -29,8 +29,6 @@ public class Main extends JFrame{
         JPanel panel_url;
         JTextField tf_url;
         JButton button_dl;
-        
-	static Downloader dl;
 	
         @SuppressWarnings("Convert2Lambda")
 	public static void main(String argv[]) {
@@ -82,38 +80,38 @@ public class Main extends JFrame{
 
         @SuppressWarnings("Convert2Lambda")
 	private static void add_download(String url) {
+            Downloader dl;
+            
             try {
                 dl = new Downloader(url);
+                dls.add(dl);
+
+                JProgressBar prog;
+                prog = new JProgressBar(0, 100);
+                prog.setStringPainted(true);
+                panel_dl.add(prog);
+                panel_dl.revalidate();
+
+                dl.addPropertyChangeListener(new PropertyChangeListener() {
+                        @Override
+                        public void propertyChange(PropertyChangeEvent evt) {
+                            System.out.print("." + dl.getProgress());				
+                            prog.setValue(dl.getProgress());
+                            if(dl.getProgress()==100){
+                                try {
+                                    String filename = dl.get();    
+                                    System.out.println("downloaded into " + filename);
+                                } catch(InterruptedException | ExecutionException e) {
+                                    System.err.println(e);
+                                }
+                            }
+                        }
+                });
+
+                dl.execute();
             }
             catch(RuntimeException e) {
                 System.err.format("skipping %s %s\n", url, e);
             }
-
-            dls.add(dl);
-
-            JProgressBar prog;
-            prog = new JProgressBar(0, 100);
-            prog.setStringPainted(true);
-            panel_dl.add(prog);
-            panel_dl.revalidate();
-            panel_dl.repaint();
-
-            dl.addPropertyChangeListener(new  PropertyChangeListener() {
-                    @Override
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        System.out.print("." + dl.getProgress());				
-                        prog.setValue(dl.getProgress());
-                        if(dl.getProgress()==100){
-                            try {
-                                String filename = dl.get();    
-                                System.out.println("downloaded into " + filename);
-                            } catch(InterruptedException | ExecutionException e) {
-                                System.err.println(e);
-                            }
-                        }
-                    }
-            });
-
-            dl.execute();
 	}
 }
