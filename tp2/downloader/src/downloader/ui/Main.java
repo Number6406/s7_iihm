@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -85,14 +86,33 @@ public class Main extends JFrame{
             try {
                 dl = new Downloader(url);
                 dls.add(dl);
+            
+                JPanel ligne;
+                ligne = new JPanel(new BorderLayout());
+                JPanel boutons = new JPanel();
+                JPanel download = new JPanel(new BorderLayout());
 
+                ligne.add(boutons,BorderLayout.EAST);
+                ligne.add(download,BorderLayout.CENTER);
+
+                JButton play = new JButton("▷");
+                JButton pause = new JButton("▯▯");
+                boutons.add(play);
+                boutons.add(pause);
+
+                JLabel label_url = new JLabel(url);
                 JProgressBar prog;
                 prog = new JProgressBar(0, 100);
                 prog.setStringPainted(true);
-                panel_dl.add(prog);
-                panel_dl.revalidate();
 
-                dl.addPropertyChangeListener(new PropertyChangeListener() {
+                download.add(label_url,BorderLayout.NORTH);
+                download.add(prog,BorderLayout.SOUTH);
+
+                panel_dl.add(ligne);
+                panel_dl.revalidate();
+                panel_dl.repaint();
+
+                dl.addPropertyChangeListener(new  PropertyChangeListener() {
                         @Override
                         public void propertyChange(PropertyChangeEvent evt) {
                             System.out.print("." + dl.getProgress());				
@@ -105,7 +125,7 @@ public class Main extends JFrame{
                                     System.err.println(e);
                                 }
                             }
-                        }
+                    }
                 });
 
                 dl.execute();
@@ -113,5 +133,5 @@ public class Main extends JFrame{
             catch(RuntimeException e) {
                 System.err.format("skipping %s %s\n", url, e);
             }
-	}
+        }
 }
