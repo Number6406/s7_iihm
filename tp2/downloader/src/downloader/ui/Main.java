@@ -21,6 +21,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class Main extends JFrame{
 	
@@ -100,15 +102,24 @@ public class Main extends JFrame{
             ligne.add(boutons,BorderLayout.EAST);
             ligne.add(download,BorderLayout.CENTER);
             
-            JButton play = new JButton("▷");
-            JButton pause = new JButton("▯▯");
-            boutons.add(play);
-            boutons.add(pause);
             
             JLabel label_url = new JLabel(url);
             JProgressBar prog;
             prog = new JProgressBar(0, 100);
             prog.setStringPainted(true);
+            
+            //JButton play = new JButton("▷");
+            JButton delete = new JButton("X");
+            delete.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    dl.cancel(true);
+                    prog.setString("Annulé");
+                }
+            });
+            //boutons.add(play);
+            boutons.add(delete);
+            
             
             download.add(label_url,BorderLayout.NORTH);
             download.add(prog,BorderLayout.SOUTH);
