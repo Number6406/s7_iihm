@@ -25,7 +25,7 @@ public class Main extends JFrame{
 	
 	static List<Downloader> dls;
         // 
-        static JScrollPane panel_dl;
+        static JPanel panel_dl;
         JPanel panel_url;
         JTextField tf_url;
         JButton button_dl;
@@ -53,7 +53,7 @@ public class Main extends JFrame{
                 this.setLayout(new BorderLayout());
                 this.setSize(400,300);
                 
-                panel_dl = new JScrollPane();
+                panel_dl = new JPanel(new StackLayout());
                 this.add(panel_dl, BorderLayout.CENTER);
                 
                 panel_url = new JPanel(new BorderLayout());
@@ -94,7 +94,7 @@ public class Main extends JFrame{
             JProgressBar prog;
             prog = new JProgressBar(0, 100);
             prog.setStringPainted(true);
-            panel_dl.getViewport().add(prog);
+            panel_dl.add(prog);
             panel_dl.revalidate();
             panel_dl.repaint();
 
