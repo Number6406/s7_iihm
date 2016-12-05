@@ -46,10 +46,12 @@ public class Downloader extends SwingWorker<String, Void> {
 		catch(IOException e) { throw new RuntimeException(e); }
 	}
 	
+        @Override
 	public String toString() {
 		return url.toString();
 	}
 	
+        @Override
 	public String doInBackground() throws InterruptedException {
 		byte buffer[] = new byte[CHUNK_SIZE];
 		int size = 0;
@@ -68,7 +70,7 @@ public class Downloader extends SwingWorker<String, Void> {
 			try{
 				count = in.read(buffer, 0, CHUNK_SIZE);
 			}
-			catch(IOException e) { continue; }
+			catch(IOException e) {}
 		}
 		
 		if(size < content_length) {

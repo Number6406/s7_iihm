@@ -9,7 +9,7 @@ import javax.swing.SwingUtilities;
 
 import downloader.fc.Downloader;
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
+//import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -23,9 +23,7 @@ import javax.swing.JTextField;
 
 public class Main extends JFrame{
 	
-	static List<JProgressBar> progs;
 	static List<Downloader> dls;
-        
         // 
         static JScrollPane panel_dl;
         JPanel panel_url;
@@ -34,9 +32,11 @@ public class Main extends JFrame{
         
 	static Downloader dl;
 	
+        @SuppressWarnings("Convert2Lambda")
 	public static void main(String argv[]) {
 		final String[] urls = argv;
 		SwingUtilities.invokeLater(new Runnable() {
+                        @Override
 			public void run() {
 				new Main("Download", urls).setVisible(true);
                                 for(String url : urls){
@@ -46,6 +46,7 @@ public class Main extends JFrame{
 		});
 	}
 
+        @SuppressWarnings("Convert2Lambda")
 	Main(String title, String[] urls) {
 		
 		super(title);
@@ -76,10 +77,10 @@ public class Main extends JFrame{
                 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
                 
-		dls = new ArrayList<Downloader>();
-		progs = new ArrayList<JProgressBar>();
+		dls = new ArrayList<>();
 	}
 
+        @SuppressWarnings("Convert2Lambda")
 	private static void add_download(String url) {
             try {
                 dl = new Downloader(url);
@@ -90,28 +91,29 @@ public class Main extends JFrame{
 
             dls.add(dl);
 
-
             JProgressBar prog;
             prog = new JProgressBar(0, 100);
             prog.setStringPainted(true);
             panel_dl.getViewport().add(prog);
-            progs.add(prog);
+            panel_dl.revalidate();
+            panel_dl.repaint();
 
             dl.addPropertyChangeListener(new  PropertyChangeListener() {
+                    @Override
                     public void propertyChange(PropertyChangeEvent evt) {
                         System.out.print("." + dl.getProgress());				
                         prog.setValue(dl.getProgress());
+                        if(dl.getProgress()==100){
+                            try {
+                                String filename = dl.get();    
+                                System.out.println("downloaded into " + filename);
+                            } catch(InterruptedException | ExecutionException e) {
+                                System.err.println(e);
+                            }
+                        }
                     }
             });
 
-            String filename = "Erreur de téléchargement";
             dl.execute();
-            try {
-                filename = dl.get();    
-            } catch(InterruptedException e) {
-                System.err.println(e);
-            } catch(ExecutionException e) {
-                System.err.println(e);
-            }
 	}
 }
