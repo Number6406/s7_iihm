@@ -25,6 +25,8 @@ build.xml
 manifest.mf
 .nb-gradle/
 .directory
+index.html
+
 
 ################################################################################################################
 # Eclipse .gitignore

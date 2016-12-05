@@ -22,3 +22,21 @@ hs_err_pid*
 /tp2/downloader/build/
 
 tp2/downloader/.idea/*
+
+################################################################################################################
+# Netbeans .gitignore
+################################################################################################################
+
+nbproject/private/
+build/
+nbbuild/
+nbproject/
+dist/
+nbdist/
+nbactions.xml
+build.xml
+manifest.mf
+.nb-gradle/
+.directory
+index.html
+nbbuild.xml
