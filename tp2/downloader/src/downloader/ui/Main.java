@@ -103,7 +103,20 @@ public class Main extends JFrame{
             prog = new JProgressBar(0, 100);
             prog.setStringPainted(true);
 
-            //JButton play = new JButton("▷");
+            //▯▯▷
+            JButton play_pause = new JButton("▯▯");
+            play_pause.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if(play_pause.getText() == "▯▯") {
+                        dl.pause();
+                        play_pause.setText("▷");
+                    } else {
+                        dl.play();
+                        play_pause.setText("▯▯");
+                    }
+                }
+            });
             JButton delete = new JButton("X");
             delete.addActionListener(new ActionListener() {
                 @Override
@@ -112,7 +125,7 @@ public class Main extends JFrame{
                     prog.setString("Annulé");
                 }
             });
-            //boutons.add(play);
+            boutons.add(play_pause);
             boutons.add(delete);
 
 
