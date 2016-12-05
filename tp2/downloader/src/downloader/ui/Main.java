@@ -74,6 +74,16 @@ public class Main extends JFrame{
                 }
             }
         });
+        
+        tf_url.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(!tf_url.getText().isEmpty()) {
+                    add_download(tf_url.getText());
+                    tf_url.setText("");
+                }
+            }
+        });
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
