@@ -17,12 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 public class Main extends JFrame{
     
@@ -108,7 +107,7 @@ public class Main extends JFrame{
             play_pause.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if(play_pause.getText() == "▯▯") {
+                    if("▯▯".equals(play_pause.getText())) {
                         dl.pause();
                         play_pause.setText("▷");
                     } else {
@@ -123,6 +122,9 @@ public class Main extends JFrame{
                 public void actionPerformed(ActionEvent e) {
                     dl.cancel(true);
                     prog.setString("Annulé");
+                    prog.setValue(0);
+                    play_pause.setEnabled(false);
+                    delete.setEnabled(false);
                 }
             });
             boutons.add(play_pause);
@@ -142,6 +144,8 @@ public class Main extends JFrame{
                     System.out.print("." + dl.getProgress());
                     prog.setValue(dl.getProgress());
                     if(dl.getProgress()==100){
+                        play_pause.setEnabled(false);
+                        delete.setEnabled(false);
                         try {
                             String filename = dl.get();
                             System.out.println("downloaded into " + filename);
@@ -156,6 +160,7 @@ public class Main extends JFrame{
         }
         catch(RuntimeException e) {
             System.err.format("skipping %s %s\n", url, e);
+            JOptionPane.showMessageDialog(panel_dl, "Url incorrecte : "+url,"Erreur url",JOptionPane.ERROR_MESSAGE);
         }
     }
 }
