@@ -18,11 +18,9 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 public class Main extends JFrame{
     
@@ -75,6 +73,16 @@ public class Main extends JFrame{
                 }
             }
         });
+        
+        tf_url.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(!tf_url.getText().isEmpty()) {
+                    add_download(tf_url.getText());
+                    tf_url.setText("");
+                }
+            }
+        });
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -108,7 +116,7 @@ public class Main extends JFrame{
             play_pause.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if(play_pause.getText() == "▯▯") {
+                    if("▯▯".equals(play_pause.getText())) {
                         dl.pause();
                         play_pause.setText("▷");
                     } else {
@@ -117,16 +125,31 @@ public class Main extends JFrame{
                     }
                 }
             });
-            JButton delete = new JButton("X");
-            delete.addActionListener(new ActionListener() {
+            JButton suppr = new JButton("X");
+            suppr.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    panel_dl.remove(ligne);
+                    panel_dl.revalidate();
+                    panel_dl.repaint();
+                }
+            });
+            
+            JButton stop = new JButton("◻");
+            stop.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     dl.cancel(true);
                     prog.setString("Annulé");
+                    prog.setValue(0);
+                    boutons.remove(play_pause);
+                    boutons.remove(stop);
+                    boutons.add(suppr);
+                    boutons.revalidate();
                 }
             });
             boutons.add(play_pause);
-            boutons.add(delete);
+            boutons.add(stop);
 
 
             download.add(label_url,BorderLayout.NORTH);
@@ -142,6 +165,10 @@ public class Main extends JFrame{
                     System.out.print("." + dl.getProgress());
                     prog.setValue(dl.getProgress());
                     if(dl.getProgress()==100){
+                        boutons.remove(play_pause);
+                        boutons.remove(stop);
+                        boutons.add(suppr);
+                        boutons.revalidate();
                         try {
                             String filename = dl.get();
                             System.out.println("downloaded into " + filename);
@@ -156,6 +183,7 @@ public class Main extends JFrame{
         }
         catch(RuntimeException e) {
             System.err.format("skipping %s %s\n", url, e);
+            JOptionPane.showMessageDialog(panel_dl, "Url incorrecte : "+url,"Erreur url",JOptionPane.ERROR_MESSAGE);
         }
     }
 }

@@ -76,7 +76,7 @@ public class Downloader extends SwingWorker<String, Void> {
             }
             catch(IOException e) {}
             lock.unlock();
-            Thread.sleep(1000);
+            Thread.sleep(700);
         }
         
         if(size < content_length) {
