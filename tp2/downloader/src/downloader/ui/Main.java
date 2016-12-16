@@ -64,6 +64,7 @@ public class Main extends JFrame{
         button_dl = new JButton("GO !");
         panel_url.add(button_dl, BorderLayout.EAST);
 
+        /*Au clic, on lance le download de l'URL présente dans le textfield*/
         button_dl.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -74,6 +75,7 @@ public class Main extends JFrame{
             }
         });
         
+        /*fonctionne également à l'appuis sur la touche [ENTER]*/
         tf_url.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -88,7 +90,8 @@ public class Main extends JFrame{
 
         dls = new ArrayList<>();
     }
-
+    
+    /*Créé un nouveau downloader à partir d'une URL et lance le téléchargement*/
     @SuppressWarnings("Convert2Lambda")
     private static void add_download(String url) {
         Downloader dl;
@@ -96,7 +99,8 @@ public class Main extends JFrame{
         try {
             dl = new Downloader(url);
             dls.add(dl);
-
+            
+            /*Création d'une nouvelle ligne à ajouter au downloader*/
             JPanel ligne;
             ligne = new JPanel(new BorderLayout());
             JPanel boutons = new JPanel();
@@ -117,14 +121,16 @@ public class Main extends JFrame{
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if("▯▯".equals(play_pause.getText())) {
-                        dl.pause();
+                        dl.pause(); // mise en pause du téléchargement
                         play_pause.setText("▷");
                     } else {
-                        dl.play();
+                        dl.play(); // reprise du téléchargement
                         play_pause.setText("▯▯");
                     }
                 }
             });
+            
+            /*Suppresion d'un téléchargement*/
             JButton suppr = new JButton("X");
             suppr.addActionListener(new ActionListener() {
                 @Override
@@ -135,6 +141,7 @@ public class Main extends JFrame{
                 }
             });
             
+            /*Arret d'un téléchargement (qu'on ne pourra donc pas reprendre)*/
             JButton stop = new JButton("◻");
             stop.addActionListener(new ActionListener() {
                 @Override
@@ -158,7 +165,7 @@ public class Main extends JFrame{
             panel_dl.add(ligne);
             panel_dl.revalidate();
 
-
+            /*Lors de la terminaison d'un téléchargement, on change l'état des boutons et on grise la progressbar (retour visuel)*/
             dl.addPropertyChangeListener(new  PropertyChangeListener() {
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
